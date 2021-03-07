@@ -13,14 +13,7 @@
         {
             "kind": "main",
             "tag": "com-fd-djaja-sap-sac-restapi",
-            "url": "https://sapit-finance-dev-mds-loc-cistaxmon-customwidget.cfapps.eu10.hana.ondemand.com/widgetCallService.js",
-            "integrity": "",
-            "ignoreIntegrity": true
-    },
-        {
-            "kind": "styling",
-            "tag": "com-fd-djaja-sap-sac-restapi-aps",
-            "url": "https://sapit-finance-dev-mds-loc-cistaxmon-customwidget.cfapps.eu10.hana.ondemand.com/widgetCallService_st.js",
+            "url": "https://adeleciullo.github.io/widgetCallService.js",
             "integrity": "",
             "ignoreIntegrity": true
     }
