@@ -6,7 +6,6 @@
       <div id="export_div" name="export_div" class="">
          <slot name="export_button"></slot>
          <form id="form" method="post" accept-charset="utf-8" action="">
-            <input id="export_settings_json" name="export_settings_json" type="hidden">
         </form>
       </div>
     `;
@@ -16,7 +15,9 @@
         constructor() {
             super();
 
-            this._shadowRoot = this.attachShadow({ mode: "open" });
+            this._shadowRoot = this.attachShadow({
+                mode: "open"
+            });
             this._shadowRoot.appendChild(tmpl.content.cloneNode(true));
 
             this._id = createGuid();
@@ -28,7 +29,7 @@
             this.settings.id = this._id + "_export_settings_json";
 
             this._cPPT_text = "HTML";
-            
+
             this._cExport_text = "Export";
             this._cExport_icon = "sap-icon://download";
 
@@ -39,9 +40,9 @@
 
             this._export_settings = {};
             this._export_settings.filename = "";
-            this._export_settings.ppt_exclude = "";          
+            this._export_settings.ppt_exclude = "";
             this._export_settings.server_urls = "";
-          
+
             this._updateSettings();
 
             this._renderExportButton();
@@ -96,7 +97,9 @@
                             this._subscription = store.subscribe({
                                 effect: state => {
                                     parseReactState(state);
-                                    return { result: 1 };
+                                    return {
+                                        result: 1
+                                    };
                                 }
                             });
                         };
@@ -115,8 +118,7 @@
                         }
                     }
                 }
-            } catch (e) {
-            }
+            } catch (e) {}
         }
 
         disconnectedCallback() {
@@ -259,7 +261,9 @@
                                 }
                             }),
                             afterClose: () => {
-                                if (lcomponent_box != null) { lcomponent_box.destroy(); }
+                                if (lcomponent_box != null) {
+                                    lcomponent_box.destroy();
+                                }
                                 ltab.destroy();
                                 dialog.destroy();
                             }
@@ -270,14 +274,19 @@
                 }
             });
 
-            this._pptMenuItem = new sap.m.MenuItem({ key: "PPT" });
+            this._pptMenuItem = new sap.m.MenuItem({
+                key: "PPT"
+            });
             menu.addItem(this._pptMenuItem);
 
             let buttonSlot = document.createElement("div");
             buttonSlot.slot = "export_button";
             this.appendChild(buttonSlot);
 
-            this._exportButton = new sap.m.MenuButton({ menu: menu, visible: false });
+            this._exportButton = new sap.m.MenuButton({
+                menu: menu,
+                visible: false
+            });
             this._exportButton.placeAt(buttonSlot);
         }
 
@@ -528,8 +537,8 @@
                     }));
 
                     if (blob) { // download blob
-                        
-                        let downloadUrl = URL.createObjectURL(blob);                        
+
+                        let downloadUrl = URL.createObjectURL(blob);
                         let a = document.createElement("a");
                         a.download = filename;
                         a.href = downloadUrl;
@@ -539,9 +548,9 @@
                         setTimeout(() => {
                             document.body.removeChild(a);
                             URL.revokeObjectURL(downloadUrl);
-                        }, 0);                        
+                        }, 0);
 
-                    } 
+                    }
                 }
             };
 
@@ -583,7 +592,7 @@
         }
 
     }
-    customElements.define("com-fd-djaja-sap-sac-export", Export);
+    customElements.define("mds-tax-tm-sac-export", Export);
 
     // PUBLIC API
     window.getHtml = getHtml;
@@ -595,7 +604,8 @@
 
     function createGuid() {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
-            let r = Math.random() * 16 | 0, v = c === "x" ? r : (r & 0x3 | 0x8);
+            let r = Math.random() * 16 | 0,
+                v = c === "x" ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
     }
@@ -661,43 +671,45 @@
                 if (node.rel == "preload") {
                     return "";
                 }
-            // fallthrough
-            case "STYLE":
-                let sheet = node.sheet;
-                if (sheet) {
-                    let shadowHost = null;
-                    let parent = node.parentNode;
-                    while (parent) {
-                        if (parent.host) {
-                            shadowHost = parent.host;
-                            break;
+                // fallthrough
+                case "STYLE":
+                    let sheet = node.sheet;
+                    if (sheet) {
+                        let shadowHost = null;
+                        let parent = node.parentNode;
+                        while (parent) {
+                            if (parent.host) {
+                                shadowHost = parent.host;
+                                break;
+                            }
+                            parent = parent.parentNode;
                         }
-                        parent = parent.parentNode;
-                    }
 
-                    if (shadowHost || settings.parse_css) {
-                        if (sheet.href) { // download external stylesheets
-                            name = "style";
-                            attributes = { "type": "text/css" };
-                            content = fetch(sheet.href).then(r => r.text()).then(t => {
-                                let style = document.createElement("style");
-                                style.type = "text/css";
-                                style.appendChild(document.createTextNode(t));
-                                document.body.appendChild(style);
-                                style.sheet.disabled = true;
-                                return getCssText(style.sheet, sheet.href, shadowHost).then(r => {
-                                    document.body.removeChild(style);
-                                    return r;
+                        if (shadowHost || settings.parse_css) {
+                            if (sheet.href) { // download external stylesheets
+                                name = "style";
+                                attributes = {
+                                    "type": "text/css"
+                                };
+                                content = fetch(sheet.href).then(r => r.text()).then(t => {
+                                    let style = document.createElement("style");
+                                    style.type = "text/css";
+                                    style.appendChild(document.createTextNode(t));
+                                    document.body.appendChild(style);
+                                    style.sheet.disabled = true;
+                                    return getCssText(style.sheet, sheet.href, shadowHost).then(r => {
+                                        document.body.removeChild(style);
+                                        return r;
+                                    });
+                                }, reason => {
+                                    return "";
                                 });
-                            }, reason => {
-                                return "";
-                            });
-                        } else {
-                            content = getCssText(sheet, document.baseURI, shadowHost);
+                            } else {
+                                content = getCssText(sheet, document.baseURI, shadowHost);
+                            }
                         }
                     }
-                }
-                break;
+                    break;
         }
 
         if (settings.parse_css) {
