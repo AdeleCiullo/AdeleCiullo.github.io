@@ -37,32 +37,23 @@
                 </tr>
               </table>
             </fieldset>
-            <fieldset>
-              <legend>Display</legend>
-              <table>
-                <tr>
-                  <td><label for="showComponentSelector">Show UI Selector</label></td>
-                  <td><input id="showComponentSelector" name="showComponentSelector" type="checkbox"></td>
-                </tr>
-              </table>
-            </fieldset>
-            <button type="submit" hidden>Submit</button>
           </form>
         `;
 
     class ExportAps extends HTMLElement {
         constructor() {
             super();
-            this._shadowRoot = this.attachShadow({ mode: "open" });
+            this._shadowRoot = this.attachShadow({
+                mode: "open"
+            });
             this._shadowRoot.appendChild(tmpl.content.cloneNode(true));
 
             let form = this._shadowRoot.getElementById("form");
             form.addEventListener("submit", this._submit.bind(this));
-            form.addEventListener("change", this._change.bind(this));           
+            form.addEventListener("change", this._change.bind(this));
         }
 
-        connectedCallback() {
-        }
+        connectedCallback() {}
 
         _submit(e) {
             e.preventDefault();
@@ -97,13 +88,6 @@
             this._setValue("serverURL", value);
         }
 
-        get showComponentSelector() {
-            return this._getBooleanValue("showComponentSelector");
-        }
-        set showComponentSelector(value) {
-            this._setBooleanValue("showComponentSelector", value);
-        }
-
         get filename() {
             return this._getValue("filename");
         }
@@ -136,7 +120,6 @@
             return [
                 "serverURL",
                 "filename",
-                "showComponentSelector",
                 "metadata"
             ];
         }
@@ -147,5 +130,5 @@
             }
         }
     }
-    customElements.define("com-fd-djaja-sap-sac-export-aps", ExportAps);
+    customElements.define("mds-tax-tm-sac-export-aps", ExportAps);
 })();
