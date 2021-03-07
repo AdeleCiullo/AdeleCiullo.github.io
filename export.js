@@ -6,6 +6,7 @@
       <div id="export_div" name="export_div" class="">
          <slot name="export_button"></slot>
          <form id="form" method="post" accept-charset="utf-8" action="">
+            <input id="export_settings_json" name="export_settings_json" type="hidden">
         </form>
       </div>
     `;
