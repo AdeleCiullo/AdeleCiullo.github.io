@@ -286,7 +286,8 @@
 
                                           console.log(data);
                                           _output = data;
-                                          var blob = new Blob([_output],{type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'}, 'responseType':'blob'); 
+                                          var blob = new Blob([_output],{type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'});
+                                  
 
                                           that._firePropertiesChanged();
                                           this.settings = {};
