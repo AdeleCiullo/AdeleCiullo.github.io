@@ -207,7 +207,7 @@
           widgetName = that._export_settings.name;
           div.slot = "content_" + widgetName;
 
-          var serverURL = that._export_settings.server_urls;
+          var serverURL = that._export_settings.serverUrl;
           console.log("serverURL: " + serverURL);
 
           if (that._firstConnectionUI5 === 0) {
