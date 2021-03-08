@@ -201,7 +201,7 @@
           widgetName = that._export_settings.name;
           div.slot = "content_" + widgetName;
 
-          var serverUrls = that._export_settings.server_urls;
+          var server_urls = that._export_settings.server_urls;
           console.log("restAPIURL: " + server_urls);
 
           if (that._firstConnectionUI5 === 0) {
