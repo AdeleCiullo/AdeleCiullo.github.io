@@ -28,8 +28,8 @@
               <legend>General</legend>
               <table>
                 <tr>
-                  <td><label for="serverURL">Server URL</label></td>
-                  <td><input id="serverURL" name="serverURL" type="text"></td>
+                  <td><label for="serverUrl">Server URL</label></td>
+                  <td><input id="serverUrl" name="serverUrl" type="text"></td>
                 </tr>
                 <tr>
                   <td><label for="filename">Filename</label></td>
@@ -126,7 +126,7 @@
 
         static get observedAttributes() {
             return [
-                "serverURL",
+                "serverUrl",
                 "filename",
                 "metadata"
             ];
