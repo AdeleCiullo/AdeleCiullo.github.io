@@ -198,7 +198,7 @@
           var that_ = that;
 
           div = document.createElement('div');
-          widgetName = "exportExcel";
+          widgetName = that._export_settings.name;
           div.slot = "content_" + widgetName;
 
           var serverUrls = that._export_settings.server_urls;
