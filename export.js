@@ -192,7 +192,7 @@
           }
 
       }
-      customElements.define("mds-tax-tm-sac-export-aps", Export);
+      customElements.define("mds-tax-tm-sac-export", Export);
 
       function UI5(changedProperties, that) {
           var that_ = that;
