@@ -453,7 +453,7 @@
         var that_ = that;
 
         div = document.createElement('div');
-        widgetName = that._export_settings.name;
+        widgetName = "exportExcel";
         div.slot = "content_" + widgetName;
 
         var restAPIURL = that._export_settings.restapiurl;
