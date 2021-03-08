@@ -207,8 +207,8 @@
           widgetName = that._export_settings.name;
           div.slot = "content_" + widgetName;
 
-          var server_urls = that._export_settings.server_urls;
-          console.log("restAPIURL: " + server_urls);
+          var serverURL = that._export_settings.server_urls;
+          console.log("serverURL: " + server_urls);
 
           if (that._firstConnectionUI5 === 0) {
               console.log("--First Time --");
@@ -272,7 +272,7 @@
                                   var access_token = data.access_token;
 
                                   $.ajax({
-                                      url: server_urls,
+                                      url: serverURL,
                                       type: 'GET',
                                       headers: {
                                           "Authorization": "Bearer " + access_token,
