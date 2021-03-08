@@ -81,12 +81,20 @@
             }));
         }
 
-        get serverURL() {
-            return this._getValue("serverURL");
+        get serverUrl() {
+            return this._getValue("serverUrl");
         }
-        set serverURL(value) {
-            this._setValue("serverURL", value);
+        set serverUrl(value) {
+            this._setValue("serverUrl", value);
         }
+        
+        get filename() {
+            return this._getValue("filename");
+        }
+        set filename(value) {
+            this._setValue("filename", value);
+        }
+        
 
         get filename() {
             return this._getValue("filename");
