@@ -3,12 +3,6 @@
     tmpl.innerHTML = `
       <style>
       </style>
-      <div id="export_div" name="export_div" class="">
-         <slot name="export_button"></slot>
-         <form id="form" method="post" accept-charset="utf-8" action="">
-            <input id="export_settings_json" name="export_settings_json" type="hidden">
-        </form>
-      </div>
     `;
 
     class Export extends HTMLElement {
@@ -16,44 +10,35 @@
         constructor() {
             super();
 
-            this._shadowRoot = this.attachShadow({
+            _shadowRoot = this.attachShadow({
                 mode: "open"
             });
-            this._shadowRoot.appendChild(tmpl.content.cloneNode(true));
+            _shadowRoot.appendChild(tmpl.content.cloneNode(true));
 
-            this._id = createGuid();
+            _id = createGuid();
 
-            this._shadowRoot.querySelector("#export_div").id = this._id + "_export_div";
-            this._shadowRoot.querySelector("#form").id = this._id + "_form";
-
-            this.settings = this._shadowRoot.querySelector("#export_settings_json");
-            this.settings.id = this._id + "_export_settings_json";
-
-            this._cPPT_text = "HTML";
-
-            this._cExport_text = "Export";
-            this._cExport_icon = "sap-icon://download";
-
-            this._showIcons = true;
-            this._showTexts = false;
-            this._showComponentSelector = false;
-            this._enablePPT = true;
+            //_shadowRoot.querySelector("#oView").id = _id + "_oView";
 
             this._export_settings = {};
-            this._export_settings.filename = "";
-            this._export_settings.ppt_exclude = "";
-            this._export_settings.server_urls = "";
+            this._export_settings.restapiurl = "";
+            this._export_settings.output = "";
+            this._export_settings.name = "";
+            this._export_settings.data = "";
 
-            this._updateSettings();
+            this.addEventListener("click", event => {
+                console.log('click');
+            });
 
-            this._renderExportButton();
+            this._firstConnection = 0;
+            this._firstConnectionUI5 = 0;
+
         }
 
         connectedCallback() {
-            // try detect components in edit mode
             try {
                 if (window.commonApp) {
                     let outlineContainer = commonApp.getShell().findElements(true, ele => ele.hasStyleClass && ele.hasStyleClass("sapAppBuildingOutline"))[0]; // sId: "__container0"
+
                     if (outlineContainer && outlineContainer.getReactProps) {
                         let parseReactState = state => {
                             let components = {};
@@ -74,6 +59,10 @@
                                     type: type,
                                     name: name
                                 };
+                            }
+
+                            for (let componentId in components) {
+                                let component = components[componentId];
                             }
 
                             let metadata = JSON.stringify({
@@ -136,159 +125,24 @@
         }
 
         onCustomWidgetAfterUpdate(changedProperties) {
-            this._pptMenuItem.setVisible(this.enablePpt);
-            this._pptMenuItem.setText(this.showTexts ? this._cPPT_text : null);
-            this._pptMenuItem.setIcon(this.showIcons ? this._cPPT_icon : null);
-
-            this._exportButton.setVisible(this.showTexts || this.showIcons);
-            this._exportButton.setText(this.showTexts ? this._cExport_text : null);
-            this._exportButton.setIcon(this.showIcons ? this._cExport_icon : null);
-            if (this._designMode) {
-                this._exportButton.setEnabled(false);
-            }
+            UI5(changedProperties, this);
         }
 
         _renderExportButton() {
-            let menu = new sap.m.Menu({
-                title: this._cExport_text,
-                itemSelected: oEvent => {
-                    let oItem = oEvent.getParameter("item");
-                    if (!this.showComponentSelector) {
-                        this.doExport(oItem.getKey());
-                    } else {
-                        let ltab = new sap.m.IconTabBar({
-                            expandable: false
-                        });
+            let components = this.metadata ? JSON.parse(this.metadata)["components"] : {};
+            console.log("_renderExportButton-components");
+            console.log(components);
+        }
 
-                        let lcomponent_box;
-                        if (this.showComponentSelector) {
-                            lcomponent_box = new sap.ui.layout.form.SimpleForm({
-                                layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
-                                columnsM: 2,
-                                columnsL: 4
-                            });
-
-                            let components = this.metadata ? JSON.parse(this.metadata)["components"] : {};
-
-                            if (this["_initialVisibleComponents" + oItem.getKey()] == null) {
-                                this["_initialVisibleComponents" + oItem.getKey()] = this[oItem.getKey().toLowerCase() + "SelectedWidgets"] ? JSON.parse(this[oItem.getKey().toLowerCase() + "SelectedWidgets"]) : [];
-                            }
-
-                            if (this["_initialVisibleComponents" + oItem.getKey()].length == 0) {
-                                let linitial = [];
-                                for (let componentId in components) {
-                                    let component = components[componentId];
-                                    var lcomp = {};
-                                    lcomp.component = component.name;
-                                    lcomp.isExcluded = false;
-                                    lcomp.type = component.type;
-                                    linitial.push(lcomp);
-                                }
-                                this[oItem.getKey().toLowerCase() + "SelectedWidgets"] = JSON.stringify(linitial);
-                            }
-                            for (let componentId in components) {
-                                let component = components[componentId];
-
-                                if (component.type === "sdk_com_fd_djaja_sap_sac_export__0") {
-                                    continue;
-                                }
-
-                                if (this["_initialVisibleComponents" + oItem.getKey()].length == 0 || this["_initialVisibleComponents" + oItem.getKey()].some(v => v.component == component.name && !v.isExcluded)) {
-                                    let ltext = component.name.replace(/_/g, " ");
-
-                                    lcomponent_box.addContent(new sap.m.CheckBox({
-                                        id: component.name,
-                                        text: ltext,
-                                        selected: true,
-                                        select: oEvent => {
-                                            let visibleComponents = [];
-                                            let objIndex = -1;
-
-                                            if (this[oItem.getKey().toLowerCase() + "SelectedWidgets"] != "") {
-                                                visibleComponents = JSON.parse(this[oItem.getKey().toLowerCase() + "SelectedWidgets"]);
-                                                objIndex = visibleComponents.findIndex(v => v.component == oEvent.getParameter("id"));
-                                            }
-                                            if (objIndex > -1) {
-                                                visibleComponents[objIndex].isExcluded = !oEvent.getParameter("selected");
-                                            } else {
-
-                                                visibleComponents.push({
-                                                    component: oEvent.getParameter("id"),
-                                                    isExcluded: !oEvent.getParameter("selected"),
-                                                    type: oEvent.getParameter("type")
-                                                });
-                                            }
-
-                                            console.log("----------------visibleComponents--------------------");
-                                            console.log(visibleComponents);
-
-                                            this[oItem.getKey().toLowerCase() + "SelectedWidgets"] = JSON.stringify(visibleComponents);
-                                        }
-                                    }));
-                                }
-                            }
-
-                            ltab.addItem(new sap.m.IconTabFilter({
-                                key: "components",
-                                text: "Select UI",
-                                icon: "",
-                                content: [
-                                    lcomponent_box
-                                ]
-                            }));
-                        }
-
-                        let dialog = new sap.m.Dialog({
-                            title: "Export",
-                            contentWidth: "500px",
-                            contentHeight: "400px",
-                            draggable: true,
-                            resizable: true,
-                            content: [
-                                ltab
-                            ],
-                            beginButton: new sap.m.Button({
-                                text: "Submit",
-                                press: () => {
-                                    this._updateSettings();
-                                    this.doExport(oItem.getKey());
-                                    dialog.close();
-                                }
-                            }),
-                            endButton: new sap.m.Button({
-                                text: "Cancel",
-                                press: () => {
-                                    dialog.close();
-                                }
-                            }),
-                            afterClose: () => {
-                                if (lcomponent_box != null) {
-                                    lcomponent_box.destroy();
-                                }
-                                ltab.destroy();
-                                dialog.destroy();
-                            }
-                        });
-
-                        dialog.open();
+        _firePropertiesChanged() {
+            this.output = "";
+            this.dispatchEvent(new CustomEvent("propertiesChanged", {
+                detail: {
+                    properties: {
+                        output: this.output
                     }
                 }
-            });
-
-            this._pptMenuItem = new sap.m.MenuItem({
-                key: "PPT"
-            });
-            menu.addItem(this._pptMenuItem);
-
-            let buttonSlot = document.createElement("div");
-            buttonSlot.slot = "export_button";
-            this.appendChild(buttonSlot);
-
-            this._exportButton = new sap.m.MenuButton({
-                menu: menu,
-                visible: false
-            });
-            this._exportButton.placeAt(buttonSlot);
+            }));
         }
 
         // DISPLAY
@@ -595,13 +449,140 @@
     }
     customElements.define("mds-tax-tm-sac-export", Export);
 
-    // PUBLIC API
-    window.getHtml = getHtml;
+    function UI5(changedProperties, that) {
+        var that_ = that;
 
-    // UTILS
-    const cssUrlRegExp = /url\(["']?(.*?)["']?\)/i;
-    const contentDispositionFilenameRegExp = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/i;
-    const startsWithHttpRegExp = /^http/i;
+        div = document.createElement('div');
+        widgetName = that._export_settings.name;
+        div.slot = "content_" + widgetName;
+
+        var restAPIURL = that._export_settings.restapiurl;
+        console.log("restAPIURL: " + restAPIURL);
+
+        if (that._firstConnectionUI5 === 0) {
+            console.log("--First Time --");
+
+            let div0 = document.createElement('div');
+            div0.innerHTML = '<?xml version="1.0"?><script id="oView_' + widgetName + '" name="oView_' + widgetName + '" type="sapui5/xmlview"><mvc:View xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" height="100%" controllerName="myView.Template"><l:VerticalLayout class="sapUiContentPadding" width="100%"><Button id="buttonId" class="sapUiSmallMarginBottom" text="Download" width="150px" press=".onButtonPress" /></l:VerticalLayout></mvc:View></script>';
+            _shadowRoot.appendChild(div0);
+
+            let div1 = document.createElement('div');
+            div1.innerHTML = '<div id="ui5_content_' + widgetName + '" name="ui5_content_' + widgetName + '"><slot name="content_' + widgetName + '"></slot></div>';
+            _shadowRoot.appendChild(div1);
+
+            that_.appendChild(div);
+
+            var mapcanvas_divstr = _shadowRoot.getElementById('oView_' + widgetName);
+
+            Ar.push({
+                'id': widgetName,
+                'div': mapcanvas_divstr
+            });
+            console.log(Ar);
+        }
+
+        sap.ui.getCore().attachInit(function () {
+            "use strict";
+
+            //### Controller ###
+            sap.ui.define([
+                "jquery.sap.global",
+                "sap/ui/core/mvc/Controller",
+                "sap/m/MessageToast",
+                'sap/m/MessageBox'
+            ], function (jQuery, Controller, MessageToast, MessageBox) {
+                "use strict";
+
+                return Controller.extend("myView.Template", {
+
+
+                    onButtonPress: function (oEvent) {
+                        var this_ = this;
+
+                        var CLIENT_ID_str = 'sb-download!t77927';
+                        var CLIENT_SECRET_str = 'tqTFIG7fbxLlCSZYs2x8yh2UBHo=';
+
+                        $.ajax({
+                            type: 'GET',
+                            url: "https://sapit-finance-dev.authentication.eu10.hana.ondemand.com/oauth/token",
+                            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                            crossDomain: true,
+                            cache: true,
+                            dataType: 'json',
+                            data: {
+                                client_id: CLIENT_ID_str,
+                                client_secret: CLIENT_SECRET_str,
+                                grant_type: 'client_credentials',
+                            },
+
+                            success: function (data) {
+                                console.log(data);
+
+                                var access_token = data.access_token;
+
+                                $.ajax({
+                                    url: restAPIURL,
+                                    type: 'GET',
+                                    headers: {
+                                        "Authorization": "Bearer " + access_token,
+                                        "Content-Type": "application/x-www-form-urlencoded"
+                                    },
+
+                                    async: true,
+                                    timeout: 0,
+                                    contentType: 'application/x-www-form-urlencoded',
+                                    success: function (data) {
+
+                                        console.log(data);
+                                        _output = data;
+
+                                        that._firePropertiesChanged();
+                                        this.settings = {};
+                                        this.settings.output = "";
+
+                                        that.dispatchEvent(new CustomEvent("onStart", {
+                                            detail: {
+                                                settings: this.settings
+                                            }
+                                        }));
+
+                                    },
+                                    error: function (e) {
+
+                                        console.log("error: " + e);
+                                        console.log(e);
+                                    }
+                                });
+
+                            },
+                            error: function (e) {
+
+                                console.log(e.responseText);
+                            }
+                        });
+                    },
+
+                });
+            });
+
+            console.log("widgetName:" + widgetName);
+            var foundIndex = Ar.findIndex(x => x.id == widgetName);
+            var divfinal = Ar[foundIndex].div;
+
+            //### THE APP: place the XMLView somewhere into DOM ###
+            var oView = sap.ui.xmlview({
+                viewContent: jQuery(divfinal).html(),
+            });
+
+            oView.placeAt(div);
+
+            if (that_._designMode) {
+                oView.byId("buttonId").setEnabled(false);
+            } else {
+                oView.byId("buttonId").setEnabled(true);
+            }
+        });
+    }
 
     function createGuid() {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
@@ -611,284 +592,4 @@
         });
     }
 
-    function getHtml(settings) {
-        let html = [];
-        let promises = [];
-        cloneNode(document.documentElement, html, promises, settings || {});
-        return Promise.all(promises).then(() => {
-            if (document.doctype && typeof XMLSerializer != "undefined") { // <!DOCTYPE html>
-                html.unshift(new XMLSerializer().serializeToString(document.doctype));
-            }
-
-            return html.join("");
-        });
-    }
-
-    function cloneNode(node, html, promises, settings) {
-        if (node.nodeType == 8) return; // COMMENT
-        if (node.tagName == "SCRIPT") return; // SCRIPT
-
-        if (node.nodeType == 3) { // TEXT
-            html.push(escapeText(node.nodeValue));
-            return;
-        }
-
-        let name = node.localName;
-        let content = null;
-        let attributes = Object.create(null);
-        for (let i = 0; i < node.attributes.length; i++) {
-            let attribute = node.attributes[i];
-            attributes[attribute.name] = attribute.value;
-        }
-
-
-        switch (node.tagName) {
-            case "INPUT":
-                attributes["value"] = node.value;
-                delete attributes["checked"];
-                if (node.checked) {
-                    attributes["checked"] = "checked";
-                }
-                break;
-            case "OPTION":
-                delete attributes["selected"];
-                if (node.selected) {
-                    attributes["selected"] = "selected";
-                }
-                break;
-            case "TEXTAREA":
-                content = node.value;
-                break;
-            case "CANVAS":
-                name = "img";
-                attributes["src"] = node.toDataURL("image/png");
-                break;
-            case "IMG":
-                if (node.src && !node.src.includes("data:")) {
-                    attributes["src"] = getUrlAsDataUrl(node.src).then(d => d, () => node.src);
-                }
-                break;
-            case "LINK":
-                if (node.rel == "preload") {
-                    return "";
-                }
-                // fallthrough
-                case "STYLE":
-                    let sheet = node.sheet;
-                    if (sheet) {
-                        let shadowHost = null;
-                        let parent = node.parentNode;
-                        while (parent) {
-                            if (parent.host) {
-                                shadowHost = parent.host;
-                                break;
-                            }
-                            parent = parent.parentNode;
-                        }
-
-                        if (shadowHost || settings.parse_css) {
-                            if (sheet.href) { // download external stylesheets
-                                name = "style";
-                                attributes = {
-                                    "type": "text/css"
-                                };
-                                content = fetch(sheet.href).then(r => r.text()).then(t => {
-                                    let style = document.createElement("style");
-                                    style.type = "text/css";
-                                    style.appendChild(document.createTextNode(t));
-                                    document.body.appendChild(style);
-                                    style.sheet.disabled = true;
-                                    return getCssText(style.sheet, sheet.href, shadowHost).then(r => {
-                                        document.body.removeChild(style);
-                                        return r;
-                                    });
-                                }, reason => {
-                                    return "";
-                                });
-                            } else {
-                                content = getCssText(sheet, document.baseURI, shadowHost);
-                            }
-                        }
-                    }
-                    break;
-        }
-
-        if (settings.parse_css) {
-            if (attributes["style"]) {
-                let style = attributes["style"];
-                if (style.includes("url") && !style.includes("data:")) {
-                    let url = cssUrlRegExp.exec(style)[1];
-                    if (url) {
-                        attributes["style"] = getUrlAsDataUrl(toAbsoluteUrl(document.baseURI, url)).then(d => style.replace(url, d), () => style);
-                    }
-                }
-            }
-        }
-
-        html.push("<");
-        html.push(name);
-        for (let name in attributes) {
-            let value = attributes[name];
-
-            html.push(" ");
-            html.push(name);
-            html.push("=\"");
-            if (value.then) {
-                let index = html.length;
-                html.push(""); // placeholder
-                promises.push(value.then(v => html[index] = escapeAttributeValue(v)));
-            } else {
-                html.push(escapeAttributeValue(value));
-            }
-            html.push("\"");
-        }
-        html.push(">");
-        let isEmpty = true;
-        if (content) {
-            if (content.then) {
-                let index = html.length;
-                html.push(""); // placeholder
-                promises.push(content.then(c => html[index] = escapeText(c)));
-            } else {
-                html.push(escapeText(content));
-            }
-            isEmpty = false;
-        } else {
-            let child = node.firstChild;
-            if ((!child || node.tagName == "COM-BIEXCELLENCE-OPENBI-SAP-SAC-EXPORT") && node.shadowRoot) { // shadowRoot
-                child = node.shadowRoot.firstChild;
-            }
-            while (child) {
-                html.push(cloneNode(child, html, promises, settings));
-                child = child.nextSibling;
-                isEmpty = false;
-            }
-        }
-        if (isEmpty && !new RegExp("</" + node.tagName + ">$", "i").test(node.outerHTML)) {
-            // no end tag
-        } else {
-            html.push("</");
-            html.push(name);
-            html.push(">");
-        }
-    }
-
-    function getCssText(sheet, baseUrl, shadowHost) {
-        return parseCssRules(sheet.rules, baseUrl, shadowHost);
-    }
-
-    function parseCssRules(rules, baseUrl, shadowHost) {
-        let promises = [];
-        let css = [];
-
-        for (let i = 0; i < rules.length; i++) {
-            let rule = rules[i];
-
-            if (rule.type == CSSRule.MEDIA_RULE) { // media query
-                css.push("@media ");
-                css.push(rule.conditionText);
-                css.push("{");
-
-                let index = css.length;
-                css.push(""); // placeholder
-                promises.push(parseCssRules(rule.cssRules, baseUrl, shadowHost).then(c => css[index] = c));
-
-                css.push("}");
-            } else if (rule.type == CSSRule.IMPORT_RULE) { // @import
-                let index = css.length;
-                css.push(""); // placeholder
-                promises.push(getCssText(rule.styleSheet, baseUrl, shadowHost).then(c => css[index] = c));
-            } else if (rule.type == CSSRule.STYLE_RULE) {
-                if (shadowHost) { // prefix with shadow host name...
-                    css.push(shadowHost.localName);
-                    css.push(" ");
-                    css.push(rule.selectorText.split(",").join("," + shadowHost.localName));
-                } else {
-                    css.push(rule.selectorText);
-                }
-                css.push(" {");
-                for (let j = 0; j < rule.style.length; j++) {
-                    let name = rule.style[j]
-                    let value = rule.style[name];
-                    css.push(name);
-                    css.push(":");
-                    if (name.startsWith("background") && value && value.includes("url") && !value.includes("data:")) {
-                        let url = cssUrlRegExp.exec(value)[1];
-                        if (url) {
-                            let index = css.length;
-                            css.push(""); // placeholder
-                            promises.push(getUrlAsDataUrl(toAbsoluteUrl(baseUrl, url)).then(d => css[index] = "url(" + d + ")", () => css[index] = value));
-                        }
-                    }
-                    css.push(value);
-                    css.push(";");
-                }
-                css.push("}");
-            } else if (rule.type == CSSRule.FONT_FACE_RULE) {
-                css.push("@font-face {");
-                for (let j = 0; j < rule.style.length; j++) {
-                    let name = rule.style[j]
-                    let value = rule.style[name];
-                    css.push(name);
-                    css.push(":");
-                    if (name == "src" && value && value.includes("url") && !value.includes("data:")) {
-                        let url = cssUrlRegExp.exec(value)[1];
-                        if (url) {
-                            let index = css.length;
-                            css.push(""); // placeholder
-                            promises.push(getUrlAsDataUrl(toAbsoluteUrl(baseUrl, url)).then(d => css[index] = "url(" + d + ")", () => css[index] = value));
-                        }
-                    } else {
-                        css.push(value);
-                    }
-                    css.push(";");
-                }
-                css.push("}");
-            } else {
-                css.push(rule.cssText);
-            }
-        }
-
-        return Promise.all(promises).then(() => css.join(""));
-    }
-
-    function toAbsoluteUrl(baseUrl, url) {
-        if (startsWithHttpRegExp.test(url) || url.startsWith("//")) { // already absolute
-            return url;
-        }
-
-        let index = baseUrl.lastIndexOf("/");
-        if (index > 8) {
-            baseUrl = baseUrl.substring(0, index);
-        }
-        baseUrl += "/";
-
-        if (url.startsWith("/")) {
-            return baseUrl.substring(0, baseUrl.indexOf("/", 8)) + url;
-        }
-        return baseUrl + url;
-    }
-
-    function getUrlAsDataUrl(url) {
-        return fetch(url).then(r => r.blob()).then(b => {
-            return new Promise((resolve, reject) => {
-                let fileReader = new FileReader();
-                fileReader.onload = () => {
-                    resolve(fileReader.result);
-                };
-                fileReader.onerror = () => {
-                    reject(new Error("Failed to convert URL to data URL: " + url));
-                };
-                fileReader.readAsDataURL(b);
-            });
-        });
-    }
-
-    function escapeText(text) {
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    function escapeAttributeValue(value) {
-        return value.replace(/"/g, "&quot;");
-    }
 })();
