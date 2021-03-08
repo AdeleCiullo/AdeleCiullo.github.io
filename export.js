@@ -208,7 +208,7 @@
           div.slot = "content_" + widgetName;
 
           var serverURL = that._export_settings.server_urls;
-          console.log("serverURL: " + server_urls);
+          console.log("serverURL: " + serverURL);
 
           if (that._firstConnectionUI5 === 0) {
               console.log("--First Time --");
