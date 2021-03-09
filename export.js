@@ -339,7 +339,11 @@
      }
 
      function _doExport(data, filename) {
-         var blob = new Blob([data], {
+      
+        var dataFormat = new Uint8Array(atob(data).split("").map(function(c) {
+                        return c.charCodeAt(0);
+                    }));
+         var blob = new Blob([dataFormat], {
              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
          });
 
