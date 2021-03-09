@@ -208,6 +208,7 @@
          div.slot = "content_" + widgetName;
 
          var serverURL = that._export_settings.serverUrl;
+         var filename = that._export_settings.filename;
          console.log("serverURL: " + serverURL);
 
          if (that._firstConnectionUI5 === 0) {
@@ -286,10 +287,8 @@
 
                                          console.log(data);
                                          _output = data;
-                                         var blob = new Blob([_output], {
-                                             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
-                                         });
 
+                                         _doExport(_output, filename);
                                          that._firePropertiesChanged();
                                          this.settings = {};
                                          this.settings.output = "";
@@ -336,6 +335,22 @@
                  oView.byId("buttonId").setEnabled(true);
              }
          });
+     }
+
+     function _doExport(data, filename) {
+         var blob = new Blob([data], {
+             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
+         });
+
+         var downloadElement = document.createElement('a');
+         var href = window.URL.createObjectURL(blob);
+         downloadElement.href = href;
+         downloadElement.download = filename;
+         document.body.appendChild(downloadElement);
+         downloadElement.click();
+         document.body.removeChild(downloadElement);
+         window.URL.revokeObjectURL(href);
+
      }
 
      function createGuid() {
