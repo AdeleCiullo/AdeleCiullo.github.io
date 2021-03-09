@@ -283,7 +283,7 @@
                                      async: true,
                                      timeout: 0,
                                      contentType: 'application/x-www-form-urlencoded',
-                                     responseType: "blob",
+                                     responseType: "arraybuffer",
                                      success: function (data) {
 
                                          console.log(data);
