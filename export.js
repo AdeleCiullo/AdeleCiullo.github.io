@@ -154,10 +154,10 @@
 
          // SETTINGS
          getServerUrl() {
-             return this.serverURL;
+             return this.serverUrl;
          }
          setServerUrl(value) {
-             this._setValue("serverURL", value);
+             this._setValue("serverUrl", value);
          }
          get serverUrl() {
              return this._export_settings.serverUrl;
