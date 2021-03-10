@@ -220,7 +220,7 @@
          var filename = that._export_settings.filename;
          var dataToExport = that._export_settings.dataToExport;
 
-         console.log("serverURL: " + serverURL);
+         console.log("serverURL: " + dataToExport);
 
          if (that._firstConnectionUI5 === 0) {
              console.log("--First Time --");
@@ -285,12 +285,12 @@
 
                                  $.ajax({
                                      url: serverURL,
-                                     type: 'GET',
+                                     type: 'POST',
                                      headers: {
                                          "Authorization": "Bearer " + access_token,
                                          "Content-Type": "application/x-www-form-urlencoded"
                                      },
-
+                                     data: dataToExport,
                                      async: true,
                                      timeout: 0,
                                      contentType: 'application/x-www-form-urlencoded',
