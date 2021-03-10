@@ -359,11 +359,6 @@
          var byteArray = new Uint8Array(byteNumbers);
          var blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
       
-         fileSaver.saveAs(blob, 'filename.xlsx');
-/*
-         var blob = new Blob([data], {
-             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
-         });
          var downloadElement = document.createElement('a');
          var href = window.URL.createObjectURL(blob);
          downloadElement.href = href;
@@ -372,8 +367,6 @@
          downloadElement.click();
          document.body.removeChild(downloadElement);
          window.URL.revokeObjectURL(href);
-
-         */
      }
 
      function createGuid() {
