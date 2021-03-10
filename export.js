@@ -351,7 +351,7 @@
 
      function _doExport(data, filename) {
       
-         var byteCharacters = atob(res.data);
+         var byteCharacters = atob(data);
          var byteNumbers = new Array(byteCharacters.length);
          for (var i = 0; i < byteCharacters.length; i++) {
           byteNumbers[i] = byteCharacters.charCodeAt(i);
