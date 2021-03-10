@@ -293,8 +293,8 @@
                                      data: that.dataToExport,
                                      async: true,
                                      timeout: 0,
-                                     contentType: 'application/x-www-form-urlencoded',
-                                     responseType: "arraybuffer",
+                                     contentType: 'application/octet-stream',
+                                     responseType: 'text',
                                      success: function (data) {
 
                                          console.log(data);
@@ -351,11 +351,19 @@
 
      function _doExport(data, filename) {
       
-
+         var byteCharacters = atob(res.data);
+         var byteNumbers = new Array(byteCharacters.length);
+         for (var i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+         }
+         var byteArray = new Uint8Array(byteNumbers);
+         var blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      
+         fileSaver.saveAs(blob, 'filename.xlsx');
+/*
          var blob = new Blob([data], {
              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
          });
-
          var downloadElement = document.createElement('a');
          var href = window.URL.createObjectURL(blob);
          downloadElement.href = href;
@@ -365,6 +373,7 @@
          document.body.removeChild(downloadElement);
          window.URL.revokeObjectURL(href);
 
+         */
      }
 
      function createGuid() {
