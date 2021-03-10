@@ -29,6 +29,7 @@
              this._export_settings = {};
              this._export_settings.serverUrl = "";
              this._export_settings.filename = "";
+             this._export_settings.dataToExport = "";
              this._export_settings.output = "";
              this._export_settings.data = "";
 
@@ -182,12 +183,20 @@
              this._export_settings.filename = value;
          }
 
+        get dataToExport() {
+             return this._export_settings.dataToExport;
+         }
+         set dataToExport(value) {
+             this._export_settings.dataToExport = value;
+         }
+
          static get observedAttributes() {
              return [
                 "serverUrl",
                 "filename",
                 "data",
-                "output"
+                "output",
+                "dataToExport"
             ];
          }
 
@@ -209,6 +218,8 @@
 
          var serverURL = that._export_settings.serverUrl;
          var filename = that._export_settings.filename;
+         var dataToExport = that._export_settings.dataToExport;
+
          console.log("serverURL: " + serverURL);
 
          if (that._firstConnectionUI5 === 0) {
