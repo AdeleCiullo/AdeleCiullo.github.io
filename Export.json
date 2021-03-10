@@ -36,6 +36,11 @@
             "description": "The file name of the export document. The extension will be determined automatically.",
             "default": "export.xlsx"
         },
+        "dataToExport": {
+            "type": "string",
+            "description": "The data to download",
+            "default": "http://localhost:3000/export"
+        },
         "showIcons": {
             "type": "boolean",
             "description": "Show icons in the export buttons",
@@ -80,6 +85,21 @@
                     "name": "value",
                     "type": "string",
                     "description": "The new filename"
+        }
+      ]
+        },
+        "getdataToExport": {
+            "returnType": "string",
+            "description": "Get the dataToExport",
+            "parameters": []
+        },
+        "setdataToExport": {
+            "description": "Set the dataToExport",
+            "parameters": [
+                {
+                    "name": "value",
+                    "type": "string",
+                    "description": "The dataToExport"
         }
       ]
         },
