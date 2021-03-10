@@ -293,7 +293,7 @@
                                      data: dataToExport,
                                      async: true,
                                      timeout: 0,
-                                     contentType: 'application/x-www-form-urlencoded',
+                                     contentType: 'text/plain',
                                      responseType: "arraybuffer",
                                      success: function (data) {
 
