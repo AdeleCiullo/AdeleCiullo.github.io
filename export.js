@@ -280,7 +280,13 @@
 
                              success: function (data) {
                                  console.log(data);
-                                  that._firePropertiesChanged();
+                              
+                                         that.dispatchEvent(new CustomEvent("onStart", {
+                                             detail: {
+                                                 settings: this.settings
+                                             }
+                                         }));
+                                 
                                  var access_token = data.access_token;
 
                                  $.ajax({
