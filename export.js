@@ -341,7 +341,7 @@
      function _doExport(data, filename) {
       
 
-         var blob = new Blob([dataFormat], {
+         var blob = new Blob([data], {
              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'
          });
 
