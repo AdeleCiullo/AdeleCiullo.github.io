@@ -279,13 +279,7 @@
                              },
 
                              success: function (data) {
-                                 console.log(data);
-                              
-                                         that.dispatchEvent(new CustomEvent("onStart", {
-                                             detail: {
-                                                 settings: this.settings
-                                             }
-                                         }));
+                        
                                  
                                  var access_token = data.access_token;
 
@@ -296,7 +290,7 @@
                                          "Authorization": "Bearer " + access_token,
                                          "Content-Type": "application/x-www-form-urlencoded"
                                      },
-                                     data: dataToExport,
+                                     data: that.dataToExport,
                                      async: true,
                                      timeout: 0,
                                      contentType: 'text/plain',
