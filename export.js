@@ -288,12 +288,12 @@
                                      type: 'POST',
                                      headers: {
                                          "Authorization": "Bearer " + access_token,
-                                         "Content-Type": "application/x-www-form-urlencoded"
+                                         "Content-Type": "text/plain"
                                      },
                                      data: that.dataToExport,
                                      async: true,
                                      timeout: 0,
-                                     contentType: 'text/plain',
+                                     contentType: 'application/x-www-form-urlencoded',
                                      responseType: "arraybuffer",
                                      success: function (data) {
 
