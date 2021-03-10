@@ -280,7 +280,7 @@
 
                              success: function (data) {
                                  console.log(data);
-
+                                  that._firePropertiesChanged();
                                  var access_token = data.access_token;
 
                                  $.ajax({
