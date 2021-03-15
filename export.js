@@ -35,7 +35,10 @@
 
              this.addEventListener("click", event => {
                  console.log('click');
+              			var event = new Event("onInizialization");
+				             this.dispatchEvent(event);
              });
+          
 
              this._firstConnection = 0;
              this._firstConnectionUI5 = 0;
