@@ -91,7 +91,8 @@
         "getdataToExport": {
             "returnType": "string",
             "description": "Get the dataToExport",
-            "parameters": []
+            "parameters": [],
+            "body": "return this.dataToExport;"
         },
         "setdataToExport": {
             "description": "Set the dataToExport",
@@ -101,7 +102,8 @@
                     "type": "string",
                     "description": "The dataToExport"
         }
-      ]
+      ],
+            "body": "this.dataToExport = value;"
         },
         "getButtonIconVisible": {
             "returnType": "boolean",
@@ -155,6 +157,9 @@
             "description": "Specify the SAC Script that shall be triggered when the Export process receives the generated document from the Export service."
         },
         "onError": {
+            "description": "Specify the SAC Script that shall be triggered when an error is reported by the Export process."
+        },
+        "onInizialization": {
             "description": "Specify the SAC Script that shall be triggered when an error is reported by the Export process."
         }
     }
