@@ -294,34 +294,29 @@
                                     var measureName = columnValue.split("#-#")[0];
                                     var measureValue = columnValue.split("#-#")[1];
 
-                                    obj[columnName] = {
-                                        name: measureName,
-                                        value: measureValue
-                                    }
-                                } else {
-                                    key = key + columnValue + "#,# ";
+                                    obj[columnName] =
+                                        [measureName] + ":" + measureValue;
 
-                                    header.push({
-                                        label: columnName,
-                                        property: columnName
-                                    })
+                                } else {
+
+                                    key = key + columnName + ":" + columnValue + "#,# ";
+                                    header.push(columnName);
                                 }
                             }
                             obj['key'] = key;
                             result.push(obj);
                         }
+
                         var groups = _.groupBy(result, function (item) { return item.key });
+
                         data = _.map(groups, function (group) {
                             var measures = "";
 
                             for (var x = 0; x < group.length; x++) {
 
-                                header.indexOf(group[x].Measures.name) === -1 ? header.push({
-                                    label: group[x].Measures.name,
-                                    property: group[x].Measures.name
-                                }) : "";
-                                var value = group[x].Measures.value;
-                                value = value.replace(',', '');
+                                header.indexOf(group[x].Measures.name) === -1 ? header.push(group[x].Measures.name) : "";
+                                var value = group[x].Measures;
+
                                 if (measures === "") {
                                     measures = value;
                                 } else {
@@ -333,9 +328,6 @@
                             return (group[0].key + measures).split('#,# ')
                         });
 
-
-
-
                         //Delete Totals if totals is in position <> 0
                         var i = data.length;
                         while (i--) {
@@ -343,29 +335,41 @@
 
                             for (var j = 1; j < data[i].length; j++) {
 
-                                if (data[i][j] === "Totals") {
-                                    if (data[i][0] != "Totals") {
+                                if (data[i][j].split(':')[1] === "Totals") {
+
+                                    if (data[i][0].split(':')[1] != "Totals") {
+
                                         data.splice(i, 1);
 
                                         break;
-                                    } else { data[i][j] = ""; }
+                                    } else { data[i][j].split(':')[1] = ""; }
                                 }
                             }
                         }
 
-                        console.log("data" + data);
-                        header = [];
-                        header.push({
-                            label: "name"
-                        });
 
-                        data = [{ name: "Adele" }, { name: "Ciullo" }];
+                        var dataexport = [];
+
+                        var objectRow = {};
+                        for (var i = 0; i < data.length; i++) {
+                            for (var j = 0; j < data[i].length; j++) {
+
+                                objectRow[data[i][j].split(":")[0]] = data[i][j].split(":")[1]
+
+                            }
+                            dataexport.push(objectRow);
+                            objectRow = {};
+                        }
+
+                        
+
+                  
 
                         var mSettings = {
                             workbook: {
                                 columns: header
                             },
-                            dataSource: data,
+                            dataSource: dataexport,
                             fileName: "export.xlsx"
                         };
 
