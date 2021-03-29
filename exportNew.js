@@ -263,8 +263,9 @@
                 "sap/ui/core/mvc/Controller",
                 "sap/m/MessageToast",
                 'sap/m/MessageBox',
-                'sap/ui/export/Spreadsheet'
-            ], function (jQuery, Controller, MessageToast, MessageBox, Spreadsheet) {
+                'sap/ui/export/Spreadsheet',
+                'sap/ui/model/json/JSONModel'
+            ], function (jQuery, Controller, MessageToast, MessageBox, Spreadsheet, JSONModel) {
                 "use strict";
 
                 return Controller.extend("myView.Template", {
