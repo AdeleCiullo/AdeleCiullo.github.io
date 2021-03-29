@@ -317,10 +317,7 @@
 
                             for (var x = 0; x < group.length; x++) {
 
-                                header.indexOf(group[x].Measures.name) === -1 ? header.push({
-                                    label: group[x].Measures.name,
-                                    property: group[x].Measures.name
-                                }) : "";
+                                header.indexOf(group[x].Measures.split(":")[0]) === -1 ? header.push(group[x].Measures.split(":")[0]) : "";
                                 var value = group[x].Measures;
 
                                 if (measures === "") {
