@@ -262,8 +262,9 @@
                 "jquery.sap.global",
                 "sap/ui/core/mvc/Controller",
                 "sap/m/MessageToast",
-                'sap/m/MessageBox'
-            ], function (jQuery, Controller, MessageToast, MessageBox) {
+                'sap/m/MessageBox',
+                'sap/ui/export/Spreadsheet'
+            ], function (jQuery, Controller, MessageToast, MessageBox, Spreadsheet) {
                 "use strict";
 
                 return Controller.extend("myView.Template", {
@@ -345,6 +346,18 @@
                         }
 
                         console.log("data" + data);
+
+                        var mSettings = {
+                            workbook: {
+                                columns: header
+                            },
+                            dataSource: data,
+                            fileName: "export.xlsx"
+                        };
+
+                        var oSpreadsheet = new sap.ui.export.Spreadsheet(mSettings);
+                        oSpreadsheet.build();
+
                     }
 
 
