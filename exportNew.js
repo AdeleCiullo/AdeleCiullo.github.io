@@ -299,7 +299,11 @@
                                     }
                                 } else {
                                     key = key + columnValue + "#,# ";
-                                    header.push(columnName);
+
+                                    header.push({
+                                        label: columnName,
+                                        property: columnName
+                                    })
                                 }
                             }
                             obj['key'] = key;
@@ -311,7 +315,10 @@
 
                             for (var x = 0; x < group.length; x++) {
 
-                                header.indexOf(group[x].Measures.name) === -1 ? header.push(group[x].Measures.name) : "";
+                                header.indexOf(group[x].Measures.name) === -1 ? header.push({
+                                    label: group[x].Measures.name,
+                                    property: group[x].Measures.name
+                                }) : "";
                                 var value = group[x].Measures.value;
                                 value = value.replace(',', '');
                                 if (measures === "") {
@@ -326,7 +333,7 @@
                         });
 
 
-                        data.unshift(header);
+
 
                         //Delete Totals if totals is in position <> 0
                         var i = data.length;
@@ -346,6 +353,7 @@
                         }
 
                         console.log("data" + data);
+
 
                         var mSettings = {
                             workbook: {
