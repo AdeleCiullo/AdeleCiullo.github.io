@@ -300,7 +300,10 @@
                                 } else {
 
                                     key = key + columnName + ":" + columnValue + "#,# ";
-                                    header.push(columnName);
+                                    header.push({
+                                        label: columnName,
+                                        property: ColumnName
+                                    });
                                 }
                             }
                             obj['key'] = key;
@@ -314,7 +317,10 @@
 
                             for (var x = 0; x < group.length; x++) {
 
-                                header.indexOf(group[x].Measures.name) === -1 ? header.push(group[x].Measures.name) : "";
+                                header.indexOf(group[x].Measures.name) === -1 ? header.push({
+                                    label: group[x].Measures.name,
+                                    property: group[x].Measures.name
+                                }) : "";
                                 var value = group[x].Measures;
 
                                 if (measures === "") {
@@ -361,9 +367,9 @@
                             objectRow = {};
                         }
 
-                        
 
-                  
+
+
 
                         var mSettings = {
                             workbook: {
