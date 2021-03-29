@@ -302,7 +302,7 @@
                                     key = key + columnName + ":" + columnValue + "#,# ";
                                     header.push({
                                         label: columnName,
-                                        property: ColumnName
+                                        property: columnName
                                     });
                                 }
                             }
@@ -317,7 +317,9 @@
 
                             for (var x = 0; x < group.length; x++) {
 
-                                header.indexOf(group[x].Measures.split(":")[0]) === -1 ? header.push(group[x].Measures.split(":")[0]) : "";
+                                header.indexOf(group[x].Measures.split(":")[0]) === -1 ? header.push(
+                                    {label : group[x].Measures.split(":")[0],
+                                     property:   group[x].Measures.split(":")[0]}): "";
                                 var value = group[x].Measures;
 
                                 if (measures === "") {
