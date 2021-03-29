@@ -304,8 +304,47 @@
                             obj['key'] = key;
                             result.push(obj);
                         }
+                        var groups = _.groupBy(result, function (item) { return item.key });
+                        data = _.map(groups, function (group) {
+                            var measures = "";
 
-console.log("result" + result);
+                            for (var x = 0; x < group.length; x++) {
+
+                                header.indexOf(group[x].Measures.name) === -1 ? header.push(group[x].Measures.name) : "";
+                                var value = group[x].Measures.value;
+                                value = value.replace(',', '');
+                                if (measures === "") {
+                                    measures = value;
+                                } else {
+                                    measures = measures + '#,# ' + value;
+                                }
+
+                            }
+
+                            return (group[0].key + measures).split('#,# ')
+                        });
+
+
+                        data.unshift(header);
+
+                        //Delete Totals if totals is in position <> 0
+                        var i = data.length;
+                        while (i--) {
+
+
+                            for (var j = 1; j < data[i].length; j++) {
+
+                                if (data[i][j] === "Totals") {
+                                    if (data[i][0] != "Totals") {
+                                        data.splice(i, 1);
+
+                                        break;
+                                    } else { data[i][j] = ""; }
+                                }
+                            }
+                        }
+
+                        console.log("data" + data);
                     }
 
 
