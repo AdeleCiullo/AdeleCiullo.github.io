@@ -354,7 +354,12 @@
                         }
 
                         console.log("data" + data);
+                        header = [];
+                        header.push({
+                            label: "name"
+                        });
 
+                        data = [{ name: "Adele" }, { name: "Ciullo" }];
 
                         var mSettings = {
                             workbook: {
