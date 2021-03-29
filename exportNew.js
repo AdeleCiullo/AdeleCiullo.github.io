@@ -370,7 +370,10 @@
                         };
 
                         var oSpreadsheet = new sap.ui.export.Spreadsheet(mSettings);
-                        oSpreadsheet.build();
+                        oSpreadsheet.build().then(function () {
+                            MessageToast.show('Spreadsheet export has finished');
+                        })
+                            .finally(oSpreadsheet.destroy);
 
                     }
 
