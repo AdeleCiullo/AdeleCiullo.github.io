@@ -195,15 +195,15 @@
         get dataToExport() {
             return this._export_settings.dataToExport;
         }
-        set dataToExport(value) {
+        async dataToExport(value) {
             this._export_settings.dataToExport = value;
             
-            var resultSet =  value.getResultSet(); 
+            var resultSet = await value.getResultSet(); 
             var result = ArrayUtils.create(Type.string);
 
  
-         for(var i = 0; i< input.length; i++){
-                var object = input[i];
+         for(var i = 0; i< resultSet.length; i++){
+                var object = resultSet[i];
                 var row = ArrayUtils.create(Type.string);
             for(var item in object){
             var value = "";
@@ -220,7 +220,7 @@
  
         var processedResult = result.join('#|#');
  
-        var headerName =  value.getDimensions();
+        var headerName = await value.getDimensions();
         for (var x = 0; x < headerName.length; x ++) {
  
         processedResult = StringUtils.replaceAll(processedResult, headerName[x].id, headerName[x].description);
