@@ -163,11 +163,11 @@
         }
 
         _firePropertiesChanged() {
-            this.output = "";
+            this.dataToExport = "";
             this.dispatchEvent(new CustomEvent("propertiesChanged", {
                 detail: {
                     properties: {
-                        output: this.output
+                        dataToExport: this.dataToExport
                     }
                 }
             }));
