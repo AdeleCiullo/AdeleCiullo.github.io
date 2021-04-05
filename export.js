@@ -275,8 +275,8 @@
 
                     onButtonPress: async function (oEvent) {
                         var this_ = this;
-
-                                    var resultSet = await that.dataToExport.getResultSet();
+                       var datasource= await that.dataToExport;
+                                    var resultSet = await datasource.getResultSet();
             var result = ArrayUtils.create(Type.string);
 
  
