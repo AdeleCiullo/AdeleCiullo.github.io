@@ -38,24 +38,13 @@
             this._export_settings.serverUrl = "";
             this._export_settings.filename = "";
             this._export_settings.dataToExport = "";
-            this._export_settings.output = "";
-            this._export_settings.data = "";
              
 
             this.addEventListener("click", event => {
-           	var event = new Event("onInizialization");
+             	var event = new Event("onInizialization");
 				this.dispatchEvent(event);
             });
 
-                     this._firePropertiesChanged();
-                                          this.settings = {};
-                                          this.settings.output = "";
-
-                                          this.dispatchEvent(new CustomEvent("onStart", {
-                                              detail: {
-                                                  settings: this.settings
-                                              }
-                                          }));
 
             this._firstConnection = 0;
             this._firstConnectionUI5 = 0;
@@ -206,8 +195,9 @@
         get dataToExport() {
             return this._export_settings.dataToExport;
         }
-        set dataToExport(value) {
+        async dataToExport(value) {
             this._export_settings.dataToExport = value;
+            
         }
 
         static get observedAttributes() {
