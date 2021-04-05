@@ -11,22 +11,57 @@
          <slot name="content"></slot>
         </div>
         <script id="oView" name="oView" type="sapui5/xmlview">
-            <mvc:View
-			    controllerName="myView.Template"
-				xmlns:l="sap.ui.layout"
-				xmlns:mvc="sap.ui.core.mvc"
-				xmlns="sap.m">
-				<l:VerticalLayout
-					class="sapUiContentPadding"
-					width="100%">
-					<l:content>
-						<Input
-							id="passwordInput"
-							type="Password"
-							placeholder="Enter password ..." liveChange="onButtonPress"/>
-					</l:content>
-				</l:VerticalLayout>
-			</mvc:View>
+            
+<mvc:View
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:semantic="sap.m.semantic"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:mvc="sap.ui.core.mvc" class="sapUiSizeCompact" controllerName="ticketingController"> '
+            
+    <VBox class="sapUiSmallMargin">
+        <f:SimpleForm id="SimpleFormChange354" class="sapUiSizeCompact" editable="true" layout="ResponsiveGridLayout" title="Ticket Creation" labelSpanXL="4" labelSpanL="3" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1" singleContainerFullSize="false">
+            <f:content>
+                <Label text="Ticket Type" labelFor="inputTicketType"/>
+                <Select id="inputTicketType" change="onChangeSelect" selectedKey="PDR">
+                    <items>
+                        <core:Item text="Methodology Request" key="MR"/>
+                        <core:Item text="Primary Doc Request" key="PDR"/>
+                    </items>
+                </Select>
+                <Label text="Tax Report Number" labelFor="inputTaxReportNumber"/>
+                <Input id="inputTaxReportNumber" value="DCLCODE" editable="false"/>
+                <Label text="FI Year" labelFor="inputFiYear"/>
+                <Input id="inputFiYear" value="REPYEAR" editable="false"/>
+                <Label text="Tax Period" labelFor="inputTaxPeriod"/>
+                <Input id="inputTaxPeriod" value="DCLPERC" editable="false"/>
+                <Label text="Report From" labelFor="inputReportFrom"/>
+                <Input id="inputReportFrom" visible="{statusChange>/enableQuestionaire}" liveChange="handleUserInput"/>
+                <Label text="Section" labelFor="inputSection"/>
+                <Input id="inputSection" visible="{statusChange>/enableQuestionaire}" liveChange="handleUserInput"/>
+                <Label text="String" labelFor="inputString"/>
+                <Input id="inputString"  visible="{statusChange>/enableQuestionaire}" liveChange="handleUserInput"/>
+                <Label text="Request Basis" labelFor="inputRequestBasis"/>
+                <Input id="inputRequestBasis" liveChange="handleUserInput" />
+                <Label text="Document Type" labelFor="inputDocumentType"/>
+                <Input id="inputDocumentType" placeholder="{i18n>placeholderDocType}" liveChange="handleUserInput" visible="{statusChange>/docType}"/>
+                <Label text="Request Reason" labelFor="inputRequestReason"/>
+                <TextArea id="inputRequestReason" placeholder="{i18n>placeholderReason}" wrapping="None" width="100%" rows="3" liveChange="handleUserInput"/>
+                <Label text="FI Document" labelFor="inputFidocNum"/>
+                <Label text="FI Document" labelFor="inputFidocNum"/>
+                <TextArea id="inputFidocNum" placeholder="placeholderFiDocument" wrapping="None" width="100%" rows="3" liveChange="handleUserInput"/> 
+                //   + '
+                <Button text="Show Select Dialog (Multi)"  press=".onSelectDialogPress" class="sapUiSmallMarginBottom">
+                    <customData>
+                        <core:CustomData key="multi" value="true" />
+                    </customData>
+                </Button>
+            </f:content>
+        </f:SimpleForm>
+        <Button enabled="true" id="sendButton" press="onSendTicket" text="Create Ticket" visible="{statusChange>/sendButton}"/>
+    </VBox>
+</mvc:View>
         </script>        
     `;
 
@@ -199,20 +234,9 @@
             ], function(jQuery, Controller) {
                 "use strict";
 
-                return Controller.extend("myView.Template", {
-                    onButtonPress: function(oEvent) {
-                        _password = oView.byId("passwordInput").getValue();
-                        that._firePropertiesChanged();
-                        console.log(_password);
-
-                        this.settings = {};
-                        this.settings.password = "";
-
-                        that.dispatchEvent(new CustomEvent("onStart", {
-                            detail: {
-                                settings: this.settings
-                            }
-                        }));
+                return Controller.extend("ticketingController", {
+                    onSendTicket: function(oEvent) {
+    console.log('QAAAA');
                     } 
                 });
             });
