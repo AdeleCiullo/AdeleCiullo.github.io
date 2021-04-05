@@ -198,7 +198,36 @@
         async dataToExport(value) {
             this._export_settings.dataToExport = value;
             
-        }
+            var resultSet = await value.getResultSet(); 
+            var result = ArrayUtils.create(Type.string);
+
+ 
+         for(var i = 0; i< input.length; i++){
+                var object = input[i];
+                var row = ArrayUtils.create(Type.string);
+            for(var item in object){
+            var value = "";
+            if(item ==="@MeasureDimension") {
+               value = object[item].description + "#-#"  +object[item].formattedValue;}
+            else {
+                value = object[item].description;}
+            var singleField= item + "#:#" + value;
+            row.push(singleField);
+            }
+            var processedRow = row.join('#,#');
+            result.push(processedRow);
+          }
+ 
+        var processedResult = result.join('#|#');
+ 
+        var headerName = await value.getDimensions();
+        for (var x = 0; x < headerName.length; x ++) {
+ 
+        processedResult = StringUtils.replaceAll(processedResult, headerName[x].id, headerName[x].description);
+         }
+            this._export_settings.dataToExport = processedResult;
+            
+}
 
         static get observedAttributes() {
             return [
@@ -409,25 +438,6 @@
         });
     }
 
-    function _doExport(data, filename) {
-
-        var byteCharacters = atob(data);
-        var byteNumbers = new Array(byteCharacters.length);
-        for (var i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        var byteArray = new Uint8Array(byteNumbers);
-        var blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-        var downloadElement = document.createElement('a');
-        var href = window.URL.createObjectURL(blob);
-        downloadElement.href = href;
-        downloadElement.download = filename;
-        document.body.appendChild(downloadElement);
-        downloadElement.click();
-        document.body.removeChild(downloadElement);
-        window.URL.revokeObjectURL(href);
-    }
 
     function createGuid() {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
