@@ -1,6 +1,6 @@
 {
     "id": "mds.tax.tm.sac.export.1.0",
-    "version": "0.0.2",
+    "version": "0.0.1",
     "name": "exportExcel",
     "description": "SAC data export from reports to MS Excel",
     "newInstancePrefix": "Export",
@@ -13,14 +13,7 @@
         {
             "kind": "main",
             "tag": "mds-tax-tm-sac-export",
-            "url": "https://adeleciullo.github.io/export.js",
-            "integrity": "",
-            "ignoreIntegrity": true
-    },
-        {
-            "kind": "styling",
-            "tag": "mds-tax-tm-sac-export-aps",
-            "url": "https://adeleciullo.github.io/export_aps.js",
+            "url": "https://sapit-finance-dev-mds-comr-taxmon-taxmonitoring-srv.cfapps.eu10.hana.ondemand.com/downloadwidget.js",
             "integrity": "",
             "ignoreIntegrity": true
     }
@@ -29,7 +22,7 @@
         "serverUrl": {
             "type": "string",
             "description": "The URL to the open bi Repository installation that handles the export. If you use an installation on your local machine, change this property to http://localhost:9091, otherwise to the address and port of your installation.",
-            "default": "http://localhost:3000/export"
+            "default": "https://sapit-finance-dev-mds-comr-taxmon-taxmonitoring-srv.cfapps.eu10.hana.ondemand.com/download"
         },
         "filename": {
             "type": "string",
@@ -37,23 +30,8 @@
             "default": "export.xlsx"
         },
         "dataToExport": {
-            "type": "string",
+            "type": "ResultSet[]",
             "description": "The data to download",
-            "default": "http://localhost:3000/export"
-        },
-        "showIcons": {
-            "type": "boolean",
-            "description": "Show icons in the export buttons",
-            "default": true
-        },
-        "showTexts": {
-            "type": "boolean",
-            "description": "Show texts in the export buttons",
-            "default": true
-        },
-        "metadata": {
-            "type": "string",
-            "description": "For internal use",
             "default": ""
         }
     },
@@ -99,65 +77,17 @@
             "parameters": [
                 {
                     "name": "value",
-                    "type": "string",
+                    "type": "ResultSet[]",
                     "description": "The dataToExport"
         }
       ],
             "body": "this.dataToExport = value;"
-        },
-        "getButtonIconVisible": {
-            "returnType": "boolean",
-            "description": "Get the visibility of the button icon",
-            "parameters": []
-        },
-        "setButtonIconVisible": {
-            "description": "Set the visibility of the button text",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "boolean",
-                    "description": "The new visibility"
         }
-      ]
-        },
-        "getButtonTextVisible": {
-            "returnType": "boolean",
-            "description": "Get the visibility of the button text",
-            "parameters": []
-        },
-        "setButtonTextVisible": {
-            "description": "Set the visibility of the button text",
-            "parameters": [
-                {
-                    "name": "value",
-                    "type": "boolean",
-                    "description": "The new visibility"
-        }
-      ]
-        },
-        "doExport": {
-            "description": "Triggers the export process.",
-            "parameters": [
-                {
-                    "name": "format",
-                    "type": "string",
-                    "description": "The export format: \"HTML\""
-        }
-      ]
-        }
+
     },
     "events": {
         "onStart": {
             "description": "Specify the SAC Script that shall be triggered when the Export process is started. If you set the publishing property Parse CSS to true, all image resources are collected in this phase."
-        },
-        "onSend": {
-            "description": "Specify the SAC Script that shall be triggered when the Export process sends the content to the Export service."
-        },
-        "onReturn": {
-            "description": "Specify the SAC Script that shall be triggered when the Export process receives the generated document from the Export service."
-        },
-        "onError": {
-            "description": "Specify the SAC Script that shall be triggered when an error is reported by the Export process."
         },
         "onInizialization": {
             "description": "Specify the SAC Script that shall be triggered when an error is reported by the Export process."
