@@ -195,10 +195,10 @@
         get dataToExport() {
             return this._export_settings.dataToExport;
         }
-        set dataToExport(value) {
-            this._export_settings.dataToExport = value;
+        async dataToExport(value) {
             
-            var resultSet =  value.getResultSet(); 
+            
+            var resultSet = await value.getResultSet(); 
             var result = ArrayUtils.create(Type.string);
 
  
@@ -220,12 +220,13 @@
  
         var processedResult = result.join('#|#');
  
-        var headerName =  value.getDimensions();
+        var headerName = await value.getDimensions();
         for (var x = 0; x < headerName.length; x ++) {
  
         processedResult = StringUtils.replaceAll(processedResult, headerName[x].id, headerName[x].description);
          }
-            this._export_settings.dataToExport = processedResult;
+        
+            this._export_settings.dataToExport = await processedResult;
             
 }
 
@@ -299,10 +300,10 @@
                 return Controller.extend("myView.Template", {
                     onInit: function () { sap.ui.getCore().applyTheme('sap_belize'); },
 
-                    onButtonPress:  function (oEvent) {
+                    onButtonPress: function (oEvent) {
                         var this_ = this;
 
-                        var body =  that.dataToExport;
+                        var body = that.dataToExport;
 
                         var rows = body.split("#|#");
                         var result = [];
