@@ -40,6 +40,8 @@
             this._export_settings.dataToExport = "";
             this._export_settings.output = "";
             this._export_settings.data = "";
+             var event = new Event("onInizialization");
+                this.dispatchEvent(event);
 
             this.addEventListener("click", event => {
                 console.log('click');
