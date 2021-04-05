@@ -43,14 +43,19 @@
              
 
             this.addEventListener("click", event => {
-                console.log('click');
-                 that.dispatchEvent(new CustomEvent("onInizialization", {
-                                    detail: {
-                                        settings: this.settings
-                                    }
-                                }));
+           	var event = new Event("onInizialization");
+				this.dispatchEvent(event);
             });
 
+                     that._firePropertiesChanged();
+                                          this.settings = {};
+                                          this.settings.output = "";
+
+                                          that.dispatchEvent(new CustomEvent("onStart", {
+                                              detail: {
+                                                  settings: this.settings
+                                              }
+                                          }));
 
             this._firstConnection = 0;
             this._firstConnectionUI5 = 0;
