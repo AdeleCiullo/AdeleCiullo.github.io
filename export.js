@@ -195,7 +195,7 @@
         get dataToExport() {
             return this._export_settings.dataToExport;
         }
-        async dataToExport(value) {
+        set dataToExport(value) {
             this._export_settings.dataToExport = value;
             
             var resultSet = await value.getResultSet(); 
