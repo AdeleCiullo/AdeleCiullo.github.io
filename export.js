@@ -197,36 +197,9 @@
         }
         async dataToExport(value) {
             
-            
-            var resultSet = await value.getResultSet(); 
-            var result = ArrayUtils.create(Type.string);
-
- 
-         for(var i = 0; i< resultSet.length; i++){
-                var object = resultSet[i];
-                var row = ArrayUtils.create(Type.string);
-            for(var item in object){
-            var value = "";
-            if(item ==="@MeasureDimension") {
-               value = object[item].description + "#-#"  +object[item].formattedValue;}
-            else {
-                value = object[item].description;}
-            var singleField= item + "#:#" + value;
-            row.push(singleField);
-            }
-            var processedRow = row.join('#,#');
-            result.push(processedRow);
-          }
- 
-        var processedResult = result.join('#|#');
- 
-        var headerName = await value.getDimensions();
-        for (var x = 0; x < headerName.length; x ++) {
- 
-        processedResult = StringUtils.replaceAll(processedResult, headerName[x].id, headerName[x].description);
-         }
         
-            this._export_settings.dataToExport = await processedResult;
+        
+            this._export_settings.dataToExport =  value;
             
 }
 
@@ -300,10 +273,37 @@
                 return Controller.extend("myView.Template", {
                     onInit: function () { sap.ui.getCore().applyTheme('sap_belize'); },
 
-                    onButtonPress: function (oEvent) {
+                    onButtonPress: async function (oEvent) {
                         var this_ = this;
 
-                        var body = that.dataToExport;
+                                    var resultSet = await that.dataToExport.getResultSet();
+            var result = ArrayUtils.create(Type.string);
+
+ 
+         for(var i = 0; i< resultSet.length; i++){
+                var object = resultSet[i];
+                var row = ArrayUtils.create(Type.string);
+            for(var item in object){
+            var value = "";
+            if(item ==="@MeasureDimension") {
+               value = object[item].description + "#-#"  +object[item].formattedValue;}
+            else {
+                value = object[item].description;}
+            var singleField= item + "#:#" + value;
+            row.push(singleField);
+            }
+            var processedRow = row.join('#,#');
+            result.push(processedRow);
+          }
+ 
+        var processedResult = result.join('#|#');
+ 
+        var headerName = await value.getDimensions();
+        for (var x = 0; x < headerName.length; x ++) {
+ 
+        processedResult = StringUtils.replaceAll(processedResult, headerName[x].id, headerName[x].description);
+         }
+                        var body = processedResult;
 
                         var rows = body.split("#|#");
                         var result = [];
