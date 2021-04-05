@@ -299,10 +299,10 @@
                 return Controller.extend("myView.Template", {
                     onInit: function () { sap.ui.getCore().applyTheme('sap_belize'); },
 
-                    onButtonPress: function (oEvent) {
+                    onButtonPress: async function (oEvent) {
                         var this_ = this;
 
-                        var body = that.dataToExport;
+                        var body = await that.dataToExport;
 
                         var rows = body.split("#|#");
                         var result = [];
