@@ -220,7 +220,7 @@
  
         var processedResult = result.join('#|#');
  
-        var headerName = await value.getDimensions();
+        var headerName =  value.getDimensions();
         for (var x = 0; x < headerName.length; x ++) {
  
         processedResult = StringUtils.replaceAll(processedResult, headerName[x].id, headerName[x].description);
