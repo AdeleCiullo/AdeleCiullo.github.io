@@ -195,7 +195,7 @@
         get dataToExport() {
             return this._export_settings.dataToExport;
         }
-        async dataToExport(value) {
+        async setdataToExport(value) {
             this._export_settings.dataToExport = value;
             
             var resultSet = await value.getResultSet(); 
@@ -299,10 +299,10 @@
                 return Controller.extend("myView.Template", {
                     onInit: function () { sap.ui.getCore().applyTheme('sap_belize'); },
 
-                    onButtonPress: async function (oEvent) {
+                    onButtonPress:  function (oEvent) {
                         var this_ = this;
 
-                        var body = await that.dataToExport;
+                        var body =  that.dataToExport;
 
                         var rows = body.split("#|#");
                         var result = [];
