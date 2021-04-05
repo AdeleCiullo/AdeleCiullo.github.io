@@ -47,11 +47,11 @@
 				this.dispatchEvent(event);
             });
 
-                     that._firePropertiesChanged();
+                     this._firePropertiesChanged();
                                           this.settings = {};
                                           this.settings.output = "";
 
-                                          that.dispatchEvent(new CustomEvent("onStart", {
+                                          this.dispatchEvent(new CustomEvent("onStart", {
                                               detail: {
                                                   settings: this.settings
                                               }
