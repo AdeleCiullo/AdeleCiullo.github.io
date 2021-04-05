@@ -195,10 +195,10 @@
         get dataToExport() {
             return this._export_settings.dataToExport;
         }
-        async setdataToExport(value) {
+        set dataToExport(value) {
             this._export_settings.dataToExport = value;
             
-            var resultSet = await value.getResultSet(); 
+            var resultSet =  value.getResultSet(); 
             var result = ArrayUtils.create(Type.string);
 
  
