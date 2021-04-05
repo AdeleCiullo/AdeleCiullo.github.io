@@ -178,10 +178,8 @@
 
             let div0 = document.createElement('div');
             div0.innerHTML = '<?xml version="1.0"?><script id="oView_' + widgetName + '" name="oView_' + widgetName + '" type="sapui5/xmlview">'+
-         '<mvc:View controllerName="ticketingController" xmlns:l="sap.ui.layout" xmlns:u="sap.ui.unified"xmlns:mvc="sap.ui.core.mvc"' +
-	'xmlns="sap.m" class="viewPadding"> <l:VerticalLayout><u:FileUploader id="fileUploader" name="myFileUpload" uploadUrl="upload/"' +
-		'tooltip="Upload your file to the local server" uploadComplete="handleUploadComplete"/><Button text="Upload File" press="handleUploadPress"/>'
-		+'</l:VerticalLayout></mvc:View>'
+    '<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:u="sap.ui.unified"' +' controllerName="ticketingController" class="viewPadding"><l:VerticalLayout><u:FileUploader id="fileUploader" name="myFileUpload" '+ ' uploadUrl="upload/" tooltip="Upload your file to the local server" uploadComplete="handleUploadComplete" />'+
+'<Button text="Upload File" press="handleUploadPress" /> </l:VerticalLayout></mvc:View>'
                 + '</script>';
             
             _shadowRoot.appendChild(div0);
