@@ -401,11 +401,7 @@
 
             oView.placeAt(div);
 
-            if (that_._designMode) {
-                oView.byId("buttonId").setEnabled(false);
-            } else {
-                oView.byId("buttonId").setEnabled(true);
-            }
+  
         });
     }
 
