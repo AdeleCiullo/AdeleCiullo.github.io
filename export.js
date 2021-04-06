@@ -195,12 +195,16 @@
         get dataToExport() {
             return this._export_settings.dataToExport;
         }
-        async setdataToExport(value) {
-           
-        this._export_settings.dataToExport = await  value.getResultSet();
+	    
+        set dataToExport(value) {
+           var that = this;
+         value.getResultSet().then((val) => {
+	 that._export_settings.dataToExport = val;
+	})
+	}
 		
-            
-}
+        
+});
 
         static get observedAttributes() {
             return [
