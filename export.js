@@ -204,8 +204,6 @@
 	}
 		
         
-});
-
         static get observedAttributes() {
             return [
                 "serverUrl",
